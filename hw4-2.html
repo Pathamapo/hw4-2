@@ -3,11 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title class="text-center hover:text-gray-500">ระบบจัดการคลังสินค้า</title>
+    <title>ระบบจัดการคลังสินค้า</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Kanit', sans-serif;
+        }
+        button:hover {
+            background-color: #2563eb;
+            transform: scale(1.05);
+            transition: 0.3s;
+        }
+        li:hover {
+            background-color: #f3f4f6;
+            transition: 0.3s;
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap" rel="stylesheet">
@@ -30,7 +39,7 @@
                 <option value="home">ของใช้ในบ้าน</option>
                 <option value="automotive">ยานยนต์</option>
             </select>
-            <button onclick="addProduct()" class="bg-blue-500 text-white px-4 py-2 rounded mt-2 w-full">เพิ่มสินค้า</button>
+            <button onclick="addProduct()" class="bg-blue-500 text-white px-4 py-2 rounded mt-2 w-full hover:bg-blue-600">เพิ่มสินค้า</button>
         </div>
 
         <h2 class="text-xl font-bold mt-6">รายการสินค้า</h2>
@@ -102,16 +111,16 @@
             
             products.forEach((product, index) => {
                 const li = document.createElement("li");
-                li.className = "p-2 border rounded mb-2 flex justify-between";
+                li.className = "p-2 border rounded mb-2 flex justify-between hover:bg-gray-200";
                 li.innerHTML = `
                     ${product.name} - ${product.price} บาท | คงเหลือ: ${product.inStock}
-                    <button onclick="sellProduct(${index})" class="bg-red-500 text-white px-2 py-1 rounded">ขาย</button>
+                    <button onclick="sellProduct(${index})" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">ขาย</button>
                 `;
                 productList.appendChild(li);
 
                 if (product.inStock < product.minStock) {
                     const lowStockLi = document.createElement("li");
-                    lowStockLi.className = "p-2 border rounded mb-2 bg-yellow-200";
+                    lowStockLi.className = "p-2 border rounded mb-2 bg-yellow-200 hover:bg-yellow-300";
                     lowStockLi.textContent = `${product.name} - คงเหลือ: ${product.inStock}`;
                     lowStockList.appendChild(lowStockLi);
                 }
@@ -120,7 +129,7 @@
             const sortedProducts = [...products].sort((a, b) => b.totalSales - a.totalSales).slice(0, 5);
             sortedProducts.forEach(product => {
                 const bestSellingLi = document.createElement("li");
-                bestSellingLi.className = "p-2 border rounded mb-2 bg-green-200";
+                bestSellingLi.className = "p-2 border rounded mb-2 bg-green-200 hover:bg-green-300";
                 bestSellingLi.textContent = `${product.name} - ขายไปแล้ว: ${product.totalSales} ชิ้น`;
                 bestSellingList.appendChild(bestSellingLi);
             });
