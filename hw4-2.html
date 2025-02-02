@@ -29,6 +29,12 @@
 
         <h2 class="text-xl font-bold mt-6">รายการสินค้า</h2>
         <ul id="productList" class="mt-2"></ul>
+        
+        <h2 class="text-xl font-bold mt-6">สินค้าที่ใกล้หมด</h2>
+        <ul id="lowStockList" class="mt-2"></ul>
+
+        <h2 class="text-xl font-bold mt-6">สินค้าขายดี</h2>
+        <ul id="bestSellingList" class="mt-2"></ul>
     </div>
 
     <script>
@@ -79,7 +85,12 @@
 
         function renderProducts() {
             const productList = document.getElementById("productList");
+            const lowStockList = document.getElementById("lowStockList");
+            const bestSellingList = document.getElementById("bestSellingList");
+            
             productList.innerHTML = "";
+            lowStockList.innerHTML = "";
+            bestSellingList.innerHTML = "";
             
             products.forEach((product, index) => {
                 const li = document.createElement("li");
@@ -89,6 +100,21 @@
                     <button onclick="sellProduct(${index})" class="bg-red-500 text-white px-2 py-1 rounded">ขาย</button>
                 `;
                 productList.appendChild(li);
+
+                if (product.inStock < product.minStock) {
+                    const lowStockLi = document.createElement("li");
+                    lowStockLi.className = "p-2 border rounded mb-2 bg-yellow-200";
+                    lowStockLi.textContent = `${product.name} - คงเหลือ: ${product.inStock}`;
+                    lowStockList.appendChild(lowStockLi);
+                }
+            });
+
+            const sortedProducts = [...products].sort((a, b) => b.totalSales - a.totalSales).slice(0, 5);
+            sortedProducts.forEach(product => {
+                const bestSellingLi = document.createElement("li");
+                bestSellingLi.className = "p-2 border rounded mb-2 bg-green-200";
+                bestSellingLi.textContent = `${product.name} - ขายไปแล้ว: ${product.totalSales} ชิ้น`;
+                bestSellingList.appendChild(bestSellingLi);
             });
         }
 
