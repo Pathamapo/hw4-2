@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการคลังสินค้า</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-6 bg-gray-100">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold mb-4">ระบบจัดการคลังสินค้า</h1>
+        
+        <div class="mb-4">
+            <input id="productName" type="text" placeholder="ชื่อสินค้า" class="w-full p-2 border rounded">
+            <input id="productPrice" type="number" placeholder="ราคา" class="w-full p-2 border rounded mt-2">
+            <input id="productStock" type="number" placeholder="จำนวนสินค้า" class="w-full p-2 border rounded mt-2">
+            <select id="productCategory" class="w-full p-2 border rounded mt-2">
+                <option value="electronics">อิเล็กทรอนิกส์</option>
+                <option value="fashion">แฟชั่น</option>
+                <option value="grocery">ของใช้ประจำวัน</option>
+            </select>
+            <button onclick="addProduct()" class="bg-blue-500 text-white px-4 py-2 rounded mt-2 w-full">เพิ่มสินค้า</button>
+        </div>
+
+        <h2 class="text-xl font-bold mt-6">รายการสินค้า</h2>
+        <ul id="productList" class="mt-2"></ul>
+    </div>
+
+    <script>
+        function saveToLocalStorage(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (error) {
+                console.error("Error saving to localStorage:", error);
+            }
+        }
+
+        function getFromLocalStorage(key) {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : [];
+            } catch (error) {
+                console.error("Error reading from localStorage:", error);
+                return [];
+            }
+        }
+
+        let products = getFromLocalStorage("products");
+
+        function addProduct() {
+            const name = document.getElementById("productName").value.trim();
+            const price = parseFloat(document.getElementById("productPrice").value);
+            const inStock = parseInt(document.getElementById("productStock").value);
+            const category = document.getElementById("productCategory").value;
+            
+            if (!name || isNaN(price) || isNaN(inStock) || price <= 0 || inStock < 0) {
+                alert("กรุณากรอกข้อมูลให้ถูกต้อง");
+                return;
+            }
+
+            const product = {
+                id: Date.now().toString(),
+                name,
+                price,
+                inStock,
+                category,
+                totalSales: 0,
+                minStock: 5
+            };
+            products.push(product);
+            saveToLocalStorage("products", products);
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const productList = document.getElementById("productList");
+            productList.innerHTML = "";
+            
+            products.forEach((product, index) => {
+                const li = document.createElement("li");
+                li.className = "p-2 border rounded mb-2 flex justify-between";
+                li.innerHTML = `
+                    ${product.name} - ${product.price} บาท | คงเหลือ: ${product.inStock}
+                    <button onclick="sellProduct(${index})" class="bg-red-500 text-white px-2 py-1 rounded">ขาย</button>
+                `;
+                productList.appendChild(li);
+            });
+        }
+
+        function sellProduct(index) {
+            if (products[index].inStock > 0) {
+                products[index].inStock--;
+                products[index].totalSales++;
+                saveToLocalStorage("products", products);
+                renderProducts();
+            } else {
+                alert("สินค้าหมดสต็อก!");
+            }
+        }
+
+        renderProducts();
+    </script>
+</body>
+</html>
