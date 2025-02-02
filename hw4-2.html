@@ -99,6 +99,22 @@
             saveToLocalStorage("products", products);
             renderProducts();
         }
+        function updateStock(productId, quantity) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                product.inStock += quantity;
+                saveToLocalStorage("products", products);
+                renderProducts();
+            }
+        }
+
+        function checkLowStock() {
+            return products.filter(product => product.inStock < product.minStock);
+        }
+
+        function generateSalesReport() {
+            return [...products].sort((a, b) => b.totalSales - a.totalSales);
+        }
 
         function renderProducts() {
             const productList = document.getElementById("productList");
