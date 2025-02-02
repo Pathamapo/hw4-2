@@ -8,10 +8,7 @@
 </head>
 <body class="p-6 bg-gray-100">
     <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h1 class="text-2xl font-bold mb-4 text-center hover:text-blue-500 transition duration-300">
-            ระบบจัดการคลังสินค้า
-        </h1>
-        
+        <h1 class="text-2xl font-bold mb-4">ระบบจัดการคลังสินค้า</h1>
         
         <div class="mb-4">
             <input id="productName" type="text" placeholder="ชื่อสินค้า" class="w-full p-2 border rounded">
@@ -63,7 +60,7 @@
 
         function addProduct() {
             const name = document.getElementById("productName").value.trim();
-            const price = parseFloat(document.getElementById("productPrice").value);
+            let price = parseFloat(document.getElementById("productPrice").value);
             const inStock = parseInt(document.getElementById("productStock").value);
             const category = document.getElementById("productCategory").value;
             
@@ -72,6 +69,8 @@
                 return;
             }
 
+            price += 50; // เพิ่มราคา 50 บาท
+            
             const product = {
                 id: Date.now().toString(),
                 name,
